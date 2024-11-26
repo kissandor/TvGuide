@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.sandor.kis.tvguide"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.sandor.kis.tvguide"
