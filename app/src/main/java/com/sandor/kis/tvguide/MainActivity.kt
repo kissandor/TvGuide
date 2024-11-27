@@ -1,11 +1,6 @@
 package com.sandor.kis.tvguide
 
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
