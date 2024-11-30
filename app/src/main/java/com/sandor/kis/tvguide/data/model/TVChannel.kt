@@ -1,10 +1,10 @@
 package com.sandor.kis.tvguide.data.model
 
 data class TVChannel (
-    val channelId: Int,
-    val channelName: String,
-    val channelDescription: String,
+    val channelid: Int,
+    val channelname: String,
+    val channeldescription: String,
     val lcn: Int,
-    val logoUrl: String,
+    val logourl: String,
     val tstv: Boolean
 )

@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        viewBinding=true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -50,4 +54,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.gsonConverter)
     implementation(libs.okhttp)
+
+    implementation(libs.glide)
+    annotationProcessor(libs.glideCompiler)
 }

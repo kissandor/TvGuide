@@ -3,15 +3,22 @@ package com.sandor.kis.tvguide
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.sandor.kis.tvguide.data.model.TVChannel
 
-class TvGuideAdapter (private val dataset : ArrayList<String>) : RecyclerView.Adapter<TvGuideAdapter.ViewHolder>() {
+
+class TvGuideAdapter (private val dataset : ArrayList<TVChannel>) : RecyclerView.Adapter<TvGuideAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val textView : TextView
+        val imageView: ImageView
         init{
             textView = view.findViewById(R.id.textView)
+            imageView = view.findViewById(R.id.imageView)
         }
     }
 
@@ -25,6 +32,9 @@ class TvGuideAdapter (private val dataset : ArrayList<String>) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = dataset[position]
+        holder.textView.text = dataset[position].channelname
+        Glide.with(holder.itemView.context)
+            .load(dataset[position].logourl)
+            .into(holder.imageView)
     }
 }
