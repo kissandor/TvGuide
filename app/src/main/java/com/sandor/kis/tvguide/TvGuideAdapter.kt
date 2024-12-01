@@ -32,7 +32,7 @@ class TvGuideAdapter (private val dataset : ArrayList<TVChannel>) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = dataset[position].channelname
+        holder.textView.text = dataset[position].channeldescription
         Glide.with(holder.itemView.context)
             .load(dataset[position].logourl)
             .into(holder.imageView)
