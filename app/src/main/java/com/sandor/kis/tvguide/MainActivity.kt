@@ -15,6 +15,8 @@ import com.sandor.kis.tvguide.data.model.TVChannel
 import com.sandor.kis.tvguide.network.RetrofitClient
 import com.sandor.kis.tvguide.repository.TVChannelRepo
 import com.sandor.kis.tvguide.repository.TVChannelRepository
+import com.sandor.kis.tvguide.repository.TVGuideRepo
+import com.sandor.kis.tvguide.utils.MarginItemDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okio.IOException
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var channelList: ArrayList<TVChannel> = ArrayList()
     private var channelDataList: List<List<ChannelData>> = emptyList()
+    private var fetchedChannelDataList: ArrayList<ChannelData> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +50,19 @@ class MainActivity : AppCompatActivity() {
 
         // RecyclerView adapter inicializálása
         recyclerView = findViewById(R.id.recyclerView)
-        adapter = TvGuideAdapter(channelList)
+        recyclerView.addItemDecoration(MarginItemDecoration(16))
+
+        adapter = TvGuideAdapter(fetchedChannelDataList)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Hálózati hívás indítása
-        fetchChannels()
-        //fetchAllChannelData()
-        //testFetch()
+        //fetchChannels()
+        fetchAllChannelData()
+
     }
 
+    //this function works using the repository
     private fun fetchChannels() {
         lifecycleScope.launch(Dispatchers.IO) { // IO szálon
          /*   try {
@@ -95,10 +101,8 @@ class MainActivity : AppCompatActivity() {
                         // Kezelés, ha a lista üres
                         Log.w("API_WARNING", "No channels found.")
                     }
-
                     adapter.notifyDataSetChanged() // Adapter frissítése
                 }
-
             } catch (e: IOException) {
                 Log.e("API_ERROR", "IOException Failed to fetch channels", e)
             } catch (e: HttpException) {
@@ -111,39 +115,20 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) { // IO szálon
             try {
                 // Hálózati hívás
-                val response = RetrofitClient.retrofit.getChannelData(562)
+                val list = TVGuideRepo(RetrofitClient.retrofit).fetchAllChannelInfo()
+                launch(Dispatchers.Main) {
+                    fetchedChannelDataList.clear()
 
-                if (response.isSuccessful) {
-
-                    val channelDataResponse = response.body()
-                    if (channelDataResponse != null) {
-
-
-                        //channelDataList.clear() // Megakadályozza a régi adatok megmaradását
-
-                          //  channelDataList.addAll(channelDataResponse)
-
-
-                    } else {
-                        Log.e("API_ERROR", "Response body is null")
-                    }
-                } else {
-                    Log.e("API_ERROR", "Failed to fetch channels: ${response.code()}")
+                if (list.isNotEmpty()) {
+                    fetchedChannelDataList.addAll(list)
+                }
+                    adapter.notifyDataSetChanged()
                 }
             } catch (e: IOException) {
                 Log.e("API_ERROR", "IOException Failed to fetch channels", e)
             } catch (e: HttpException) {
                 Log.e("API_ERROR", "HttpException Failed to fetch channels", e)
             }
-        }
-    }
-
-    private fun testFetch(){
-        lifecycleScope.launch(Dispatchers.IO) { // IO szálon
-            try {
-                channelDataList = TVChannelRepository(RetrofitClient.retrofit).fetchAllChannelData()
-            }catch (e: Exception){}
-
         }
     }
 }
